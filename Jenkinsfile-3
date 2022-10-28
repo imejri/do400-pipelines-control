@@ -7,6 +7,7 @@ pipeline {
     parameters {
 
         booleanParam(name: "RUN_FRONTEND_TESTS", defaultValue: false)
+        choice(name: 'BRANCH_NAME', choices: ['main','stage'], description: 'Branch name where the pipeline should be executed')
     }
     stages {
         stage('RUN Tests') {
@@ -31,7 +32,7 @@ pipeline {
 
         stage('Deploy') {
             when {
-                expression { env.GIT_BRANCH == 'origin/main' }
+                expression { params.BRANCH_NAME == 'origin/main' }
                 beforeInput true
             }
             input {
