@@ -1,0 +1,34 @@
+pipeline {
+    agent {
+        node {
+            label 'nodejs'
+        } 
+    } // agent
+stages {
+        stage('Checkout') {
+            
+            steps {
+            git url: 'https://github.com/imejri/DO400-apps', branch: 'scripted-pipelines'
+                 }
+        } // stage
+
+        stage('Test') {
+            
+            steps {
+                script {
+
+                    def verbs = ['GET', 'POST', 'PUT']
+                    for (int i = 0; i < verbs.size(); ++i) {
+                        sh "simple-webapp/backend/test_api.sh ${verbs[i]}"
+                    }
+                }
+            } // steps
+        } // stage
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+            }
+        } // stage
+    } // stages
+}// pipeline
